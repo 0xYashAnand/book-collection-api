@@ -5,6 +5,7 @@ const {
   updateBook,
   deleteBook,
   getISBNBookInfo,
+  getBooksById,
 } = require("../controllers/bookController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -15,9 +16,10 @@ router.use(authMiddleware);
 
 // Routes for books
 router.get("/", getBooks); // Retrieve all books
+router.get("/:id", getBooksById); // retrive book by id
 router.get("/isbn/:isbn", getISBNBookInfo); // Retrieve book info by ISBN
 router.post("/", addBook); // Add a new book
-router.put("/:id", updateBook); // Update a book by ID
+router.patch("/:id", updateBook); // Update a book by ID
 router.delete("/:id", deleteBook); // Delete a book by ID
 
 module.exports = router;
