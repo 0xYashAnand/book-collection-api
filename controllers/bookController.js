@@ -112,20 +112,21 @@ exports.addBook = async (req, res) => {
 
     if (!title || !author || !isbn) {
       return res
-        .status(400)
-        .json({ error: "Title, author, and ISBN are required" });
+        .status(200)
+        .json({ message: null, error: "Title, author, and ISBN are required" });
     }
 
     // check if the book with existing isbn exist or not if exist then return error
     const existingBook = await Book.findOne({ where: { isbn } });
     if (existingBook) {
       return res
-        .status(400)
-        .json({ error: "Book with this ISBN already exists" });
+        .status(200)
+        .json({ message: null, error: "Book with this ISBN already exists" });
     }
 
     if (!allowedReadStatus.includes(read_status)) {
-      return res.status(400).json({
+      return res.status(200).json({
+        message: null,
         error: `read_status must be one of: ${allowedReadStatus.join(", ")}`,
       });
     }
@@ -174,7 +175,7 @@ exports.updateBook = async (req, res) => {
     // Find the book to update
     const book = await Book.findOne({ where: { id, userId: req.user.id } });
     if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+      return res.status(200).json({ message: null, error: "Book not found" });
     }
 
     // Update only provided fields (partial update)
@@ -186,7 +187,8 @@ exports.updateBook = async (req, res) => {
     if (read_status) {
       const allowedReadStatus = ["Read", "Unread", "In Progress"];
       if (!allowedReadStatus.includes(read_status)) {
-        return res.status(400).json({
+        return res.status(200).json({
+          message: null,
           error: `read_status must be one of: ${allowedReadStatus.join(", ")}`,
         });
       }
@@ -204,6 +206,7 @@ exports.updateBook = async (req, res) => {
     res.status(200).json({
       message: "Book updated successfully",
       book: updatedBook || book,
+      error: null,
     });
   } catch (error) {
     console.error(error);
@@ -221,11 +224,13 @@ exports.deleteBook = async (req, res) => {
 
     // Authorization check: Only the owner can delete the book
     if (book.userId !== req.user.id) {
-      return res.status(403).json({ error: "Unauthorized to delete book" });
+      return res
+        .status(200)
+        .json({ message: null, error: "Unauthorized to delete book" });
     }
 
     await book.destroy({ force: true });
-    res.status(200).json({ message: "Book deleted successfully" });
+    res.status(200).json({ message: "Book deleted successfully", error: null });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to delete book" });
