@@ -1,0 +1,33 @@
+# Operating system generated files
+*.swp
+*~
+.DS_Store
+.localized
+
+# Ignore the `node_modules` directory
+node_modules/
+
+# Build artifacts
+*.class
+*.jar
+*.war
+*.ear
+*.pyc
+*.so
+*.dll
+*.o
+*.a
+
+# Log files
+*.log
+*.err
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Testing files
+*.test
+*.spec
+*_test.py 
