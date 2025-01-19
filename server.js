@@ -8,8 +8,8 @@ const app = express();
 
 // Enable CORS for the specific frontend domain
 const corsOptions = {
-  origin: 'http://localhost:5173', // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  origin: "http://localhost:5173", // Replace with your frontend URL
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed methods
   credentials: true, // Allow cookies to be sent with requests (if needed)
 };
 
