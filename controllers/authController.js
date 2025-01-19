@@ -13,6 +13,18 @@ exports.register = async (req, res) => {
       });
     }
 
+    // Check if user email already exists
+    const userExists = await User.findOne({ where: { email } });
+    if (userExists) {
+      return res.status(400).json({ error: "User already exists" });
+    }
+
+    // Check if username already exists
+    const usernameExists = await User.findOne({ where: { username } });
+    if (usernameExists) {
+      return res.status(400).json({ error: "Username already exists" });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -40,6 +52,7 @@ exports.login = async (req, res) => {
       console.log("User not found:", email);
       return res.status(404).json({ error: "User not found" });
     }
+    
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {

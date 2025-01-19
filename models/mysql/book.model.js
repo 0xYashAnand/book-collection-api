@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Book = sequelize.define("Book", {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id: { type: DataTypes.UUIDV4, primaryKey: true },
   title: { type: DataTypes.STRING, allowNull: false },
   author: { type: DataTypes.STRING, allowNull: false },
   rating: { type: DataTypes.FLOAT, allowNull: true },
@@ -11,7 +11,7 @@ const Book = sequelize.define("Book", {
     type: DataTypes.ENUM("Read", "Unread", "In Progress"),
     allowNull: false,
   },
-  isbn: { type: DataTypes.STRING, unique: true, allowNull: false },
+  isbn: { type: DataTypes.STRING, allowNull: false },
   cover_image: { type: DataTypes.STRING },
   category: { type: DataTypes.STRING, allowNull: true },
   wishlist: { type: DataTypes.BOOLEAN, defaultValue: false },
