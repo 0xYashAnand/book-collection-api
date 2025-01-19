@@ -19,7 +19,16 @@ const Book = sequelize.define("Book", {
   cover_image: { type: DataTypes.STRING },
   category: { type: DataTypes.STRING, allowNull: true },
   wishlist: { type: DataTypes.BOOLEAN, defaultValue: false },
-  userId: { type: DataTypes.INTEGER, allowNull: false },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: "Users",
+      key: "id",
+    },
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  },
 });
 
 module.exports = Book;
