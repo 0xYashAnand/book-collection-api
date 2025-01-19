@@ -2,7 +2,11 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Book = sequelize.define("Book", {
-  id: { type: DataTypes.UUIDV4, primaryKey: true },
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4, // Automatically generates a UUID
+    primaryKey: true,
+  },
   title: { type: DataTypes.STRING, allowNull: false },
   author: { type: DataTypes.STRING, allowNull: false },
   rating: { type: DataTypes.FLOAT, allowNull: true },
