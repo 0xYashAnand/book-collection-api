@@ -1,15 +1,20 @@
 require("dotenv").config();
-console.log(
-  process.env.MYSQL_DB,
-  process.env.MYSQL_USER,
-  process.env.MYSQL_PASSWORD,
-  process.env.MYSQL_HOST
-);
 const express = require("express");
+const cors = require("cors");
 const sequelize = require("./config/database");
 const connectMongo = require("./config/mongo");
 
 const app = express();
+
+// Enable CORS for the specific frontend domain
+const corsOptions = {
+  origin: 'http://localhost:5173', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  credentials: true, // Allow cookies to be sent with requests (if needed)
+};
+
+app.use(cors(corsOptions)); // Apply CORS middleware
+
 app.use(express.json());
 
 // Routes
