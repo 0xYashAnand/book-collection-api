@@ -116,6 +116,14 @@ exports.addBook = async (req, res) => {
         .json({ error: "Title, author, and ISBN are required" });
     }
 
+    // check if the book with existing isbn exist or not if exist then return error
+    const existingBook = await Book.findOne({ where: { isbn } });
+    if (existingBook) {
+      return res
+        .status(400)
+        .json({ error: "Book with this ISBN already exists" });
+    }
+
     if (!allowedReadStatus.includes(read_status)) {
       return res.status(400).json({
         error: `read_status must be one of: ${allowedReadStatus.join(", ")}`,
@@ -216,7 +224,7 @@ exports.deleteBook = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized to delete book" });
     }
 
-    await book.destroy();
+    await book.destroy({ force: true });
     res.status(200).json({ message: "Book deleted successfully" });
   } catch (error) {
     console.error(error);
