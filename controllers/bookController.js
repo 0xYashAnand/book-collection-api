@@ -9,38 +9,68 @@ exports.getBooks = async (req, res) => {
       search = "",
       category = "",
       read_status = "",
+      sortBy = "createdAt", // Default sort field
+      sortOrder = "DESC", // Default sort order (DESC or ASC)
     } = req.query;
+
     const offset = (page - 1) * limit;
 
+    // Import Sequelize operators
+    const { Op } = require("sequelize");
+
     // Construct the filter conditions
-    let whereConditions = { userId: req.user.id };
+    const whereConditions = { userId: req.user.id };
 
+    // Add search filters
     if (search) {
-      whereConditions = {
-        ...whereConditions,
-        [Op.or]: [
-          { title: { [Op.like]: `%${search}%` } },
-          { author: { [Op.like]: `%${search}%` } },
-        ],
-      };
+      whereConditions[Op.or] = [
+        { title: { [Op.like]: `%${search}%` } },
+        { author: { [Op.like]: `%${search}%` } },
+        { notes: { [Op.like]: `%${search}%` } }, // Add notes search if applicable
+      ];
     }
 
-    if (category) {
-      whereConditions.category = category; // Filter by category/genre
+    // Add category filter
+    if (category !== "all") {
+      whereConditions.category = category;
     }
 
-    if (read_status) {
-      whereConditions.read_status = read_status; // Filter by read status
+    // Add read status filter
+    if (read_status !== "all") {
+      whereConditions.read_status = read_status;
     }
 
-    const books = await Book.findAll({
+    // Debug the final query conditions
+    console.log("whereConditions:", whereConditions);
+
+    // Fetch the books with filters, pagination, and sorting
+    const books = await Book.findAndCountAll({
       where: whereConditions,
-      offset,
-      limit,
+      offset: parseInt(offset, 10),
+      limit: parseInt(limit, 10),
+      order: [[sortBy, sortOrder.toUpperCase()]], // Dynamic sorting
     });
 
-    res.status(200).json(books);
+    // If no books are found, return 404
+    if (books.rows.length === 0) {
+      return res.status(404).json({ error: "No books found" });
+    }
+
+    // Construct paginated response
+    const totalPages = Math.ceil(books.count / limit);
+
+    res.status(200).json({
+      message: "Books fetched successfully",
+      data: books.rows,
+      meta: {
+        totalRecords: books.count,
+        totalPages,
+        currentPage: parseInt(page, 10),
+        pageSize: parseInt(limit, 10),
+      },
+    });
   } catch (error) {
+    console.error("Error fetching books:", error);
     res.status(500).json({ error: "Failed to fetch books" });
   }
 };
