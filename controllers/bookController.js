@@ -73,6 +73,7 @@ exports.getISBNBookInfo = async (req, res) => {
     }
 
     const bookData = {
+      ...response.data,
       title: response.data.title || "N/A",
       authors: (response.data.contributions || []).join(", "),
       publish_date: response.data.publish_date || "N/A",
