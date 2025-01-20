@@ -41,7 +41,6 @@ exports.getBooks = async (req, res) => {
 
     res.status(200).json(books);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to fetch books" });
   }
 };
@@ -57,7 +56,6 @@ exports.getBooksById = async (req, res) => {
 
     res.status(200).json(book);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to fetch book" });
   }
 };
@@ -87,7 +85,6 @@ exports.getISBNBookInfo = async (req, res) => {
 
     res.status(200).json(bookData);
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ error: "Failed to fetch book information, try again" });
@@ -175,7 +172,6 @@ exports.addBook = async (req, res) => {
 
     res.status(201).json({ message: "Book added successfully", book });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to add book" });
   }
 };
@@ -262,7 +258,6 @@ exports.updateBook = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to update book" });
   }
 };
@@ -285,7 +280,6 @@ exports.deleteBook = async (req, res) => {
     await book.destroy({ force: true });
     res.status(200).json({ message: "Book deleted successfully", error: null });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to delete book" });
   }
 };

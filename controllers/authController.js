@@ -49,7 +49,6 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      console.log("User not found:", email);
       return res.status(404).json({ error: "User not found" });
     }
     
@@ -70,7 +69,6 @@ exports.login = async (req, res) => {
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
-    console.error("Login Error:", error);
     res.status(500).json({ error: "Failed to log in" });
   }
 };
