@@ -137,9 +137,23 @@ exports.addBook = async (req, res) => {
       "Non-Fiction",
       "Mystery",
       "Sci-Fi",
+      "Fantasy",
+      "Romance",
+      "Thriller",
+      "Horror",
       "Biography",
       "History",
-    ]; // Example categories
+      "Self-Help",
+      "Young Adult",
+      "Children's",
+      "Graphic Novel",
+      "Cookbook",
+      "Travel",
+      "True Crime",
+      "Health & Fitness",
+      "Business",
+      "Poetry",
+    ];
     if (category && !allowedCategories.includes(category)) {
       return res.status(400).json({
         error: `category must be one of: ${allowedCategories.join(", ")}`,
@@ -169,8 +183,17 @@ exports.addBook = async (req, res) => {
 exports.updateBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, rating, notes, read_status, isbn, cover_image } =
-      req.body;
+    const {
+      title,
+      author,
+      rating,
+      notes,
+      read_status,
+      isbn,
+      cover_image,
+      wishlist,
+      category,
+    } = req.body;
 
     // Find the book to update
     const book = await Book.findOne({ where: { id, userId: req.user.id } });
@@ -195,8 +218,38 @@ exports.updateBook = async (req, res) => {
       updatedFields.read_status = read_status;
     }
     if (isbn) updatedFields.isbn = isbn;
+    if (wishlist !== undefined) updatedFields.wishlist = wishlist;
     if (cover_image) updatedFields.cover_image = cover_image;
 
+    // If category is provided, validate it
+    const allowedCategories = [
+      "Fiction",
+      "Non-Fiction",
+      "Mystery",
+      "Sci-Fi",
+      "Fantasy",
+      "Romance",
+      "Thriller",
+      "Horror",
+      "Biography",
+      "History",
+      "Self-Help",
+      "Young Adult",
+      "Children's",
+      "Graphic Novel",
+      "Cookbook",
+      "Travel",
+      "True Crime",
+      "Health & Fitness",
+      "Business",
+      "Poetry",
+    ];
+    if (category && !allowedCategories.includes(category)) {
+      return res.status(400).json({
+        error: `category must be one of: ${allowedCategories.join(", ")}`,
+      });
+    }
+    if (category) updatedFields.category = category; // Update category/genre
     // Update the book with the filtered fields
     await book.update(updatedFields);
 
