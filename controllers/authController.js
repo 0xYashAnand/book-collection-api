@@ -55,11 +55,10 @@ exports.getUserDetails = async (req, res) => {
       message: "User details retrieved successfully",
       data: user,
     });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ error: "Failed to fetch user details" });
   }
-}
+};
 
 exports.login = async (req, res) => {
   try {
@@ -71,7 +70,7 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
