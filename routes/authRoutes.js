@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.send("Welcome to the Auth API");
 });
-router.get("/users", getUserDetails);
+router.get("/user", getUserDetails);
 router.post("/register", register);
 router.post("/login", login);
 
