@@ -25,6 +25,10 @@ app.use("/books", require("./routes/bookRoutes"));
 const startServer = async () => {
   try {
     await sequelize.sync(); // MySQL Sync
+    await sequelize
+      .authenticate()
+      .then(() => console.log("Connection successful!"))
+      .catch((error) => console.error("Unable to connect:", error));
     await connectMongo(); // MongoDB Connection
     app.listen(3000, () => console.log("Server running on port 3000"));
   } catch (error) {

@@ -16,13 +16,17 @@ exports.register = async (req, res) => {
     // Check if user email already exists
     const userExists = await User.findOne({ where: { email } });
     if (userExists) {
-      return res.status(400).json({ error: "User already exists" });
+      return res
+        .status(400)
+        .json({ error: "Email already exists, Please login" });
     }
 
     // Check if username already exists
     const usernameExists = await User.findOne({ where: { username } });
     if (usernameExists) {
-      return res.status(400).json({ error: "Username already exists" });
+      return res
+        .status(400)
+        .json({ error: "Username already exists, Please login" });
     }
 
     // Hash password
@@ -37,7 +41,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    res.status(500).json({ error: "Failed to register user" });
+    res.status(500).json({ error: "Signup failed, Please try again" });
   }
 };
 
@@ -56,9 +60,11 @@ exports.getUserDetails = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to fetch user details" });
   }
 };
+
 
 exports.login = async (req, res) => {
   try {

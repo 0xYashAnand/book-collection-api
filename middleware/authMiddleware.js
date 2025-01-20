@@ -2,11 +2,18 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
   // Extract token from the Authorization header
-  const token =
-    req.header("Authorization") && req.header("Authorization").split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const authHeader = req.header("Authorization") || req.header("authorization");
+  if (!authHeader) {
+    return res
+      .status(403)
+      .json({ error: "Access denied. Auth-Token not found" });
+  }
+
+  const token = authHeader.split(" ")[1];
   if (!token) {
-    return res.status(403).json({ error: "Access denied. No token provided." });
+    return res
+      .status(403)
+      .json({ error: "Access denied. User not authenticated." });
   }
 
   try {
