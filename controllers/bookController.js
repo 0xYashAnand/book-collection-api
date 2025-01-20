@@ -114,8 +114,10 @@ exports.addBook = async (req, res) => {
         .json({ message: null, error: "Title, author, and ISBN are required" });
     }
 
-    // check if the book with existing isbn exist or not if exist then return error
-    const existingBook = await Book.findOne({ where: { isbn } });
+    // check if the book with existing isbn exist for the same user or not if exist then return error
+    const existingBook = await Book.findOne({
+      where: { isbn, userId: req.user.id },
+    });
     if (existingBook) {
       return res
         .status(200)
