@@ -40,9 +40,6 @@ exports.getBooks = async (req, res) => {
       whereConditions.read_status = read_status;
     }
 
-    // Debug the final query conditions
-    console.log("whereConditions:", whereConditions);
-
     // Fetch the books with filters, pagination, and sorting
     const books = await Book.findAndCountAll({
       where: whereConditions,
@@ -70,7 +67,6 @@ exports.getBooks = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching books:", error);
     res.status(500).json({ error: "Failed to fetch books" });
   }
 };
