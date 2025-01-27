@@ -8,7 +8,7 @@ const app = express();
 
 // Enable CORS for the specific frontend domain
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://bookingham.netlify.app"], // Allow multiple origins
+  origin: ["http://localhost:5173", "https://save-your-books.netlify.app"], // Allow multiple origins
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed HTTP methods
   credentials: true, // Allow cookies to be sent
 };
