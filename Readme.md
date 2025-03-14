@@ -1,112 +1,26 @@
 # Book Collection API
-
-This project is a web-based API that allows users to manage their personal book collection. The API uses both MySQL and NoSQL (MongoDB) databases to store book records and user data. It also integrates with external APIs, such as the Open Library API, to fetch additional book information based on ISBN.
+This project is a RESTful API for managing personal book collections with user authentication, book management, and integration with external book data sources.. The API uses both MySQL and NoSQL (MongoDB) databases to store book records and user data. It also integrates with external APIs, such as the Open Library API, to fetch additional book information based on ISBN.
 
 ## Features
 
-- **User Authentication**: Secure login and JWT-based authentication.
-- **CRUD Operations for Books**: Add, edit, delete, and fetch books in a user's collection.
-- **ISBN Lookup**: Fetch additional book details from the Open Library API based on ISBN.
+- **User Authentication**: Register, login, and manage user accounts using JWT-based authentication
+- **Book Management**: Add, update, delete, and retrieve books in your collection
+- **Search & Filtering**: Search books by title, author, or notes with various filters
 - **Hybrid Database**: MySQL for relational data storage (book records) and MongoDB for additional data storage needs.
-- **Multi-User Support**: Each user manages their own book collection independently.
+- **ISBN Integration**: Fetch book metadata from OpenLibrary API by ISBN
+- **Categorization**: Organize books by categories/genres
+- **Reading Status**: Track which books you've read, are reading, or want to read
+- **Wishlist**: Flag books you want to acquire
 
-## Installation
+## Technologies
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/yourusername/book-collection-api.git
-   cd book-collection-api
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file in the root directory with the following configuration:
-
-   ```
-   JWT_SECRET="your_jwt_secret_key"
-   MYSQL_HOST="localhost"
-   MYSQL_USER="root"
-   MYSQL_PASSWORD="your_mysql_password"
-   MYSQL_DATABASE="book_collection"
-   MONGODB_URI=mongodb://localhost:27017/book_collection_db
-   ```
-
-4. Set up MySQL and MongoDB:
-   - Ensure you have MySQL and MongoDB running locally or configure the respective services to use a remote instance.
-   - Create the database in MySQL if not already created.
-
-5. Run the server:
-
-   ```bash
-   npm run dev
-   ```
-
-   This will start the server in development mode using `nodemon`.
-
-## API Endpoints
-
-### Authentication
-
-- **POST** `/auth/register`:
-  - Register a new user.
-    - Body: `{ "email": "user@example.com", "password": "your_password" }`
-- **POST** `/auth/login`: 
-  - Log in an existing user and receive a JWT token.
-    - Body: `{ "email": "user@example.com", "password": "your_password" }`
-  - Response: `{ "token": "your_jwt_token" }`
-
-### Books
-
-- **GET** `/books`: Fetch all books in the collection for the logged-in user.
-- **POST** `/books`: Add a new book to the collection.
-  - Body: 
-    ```json
-    {
-      "title": "Book Title",
-      "author": "Book Author",
-      "rating": 5,
-      "notes": "Some notes about the book",
-      "read_status": "Read, Unread or In Progress",
-      "isbn": "9780140328721",
-      "cover_image": "http://example.com/cover.jpg"
-    }
-    ```
-- **GET** `/books/isbn/:isbn`: Fetch additional information for a book by ISBN from Open Library API.
-- **PUT** `/books/:id`: Update an existing book.
-  - Body: Same as the `POST` request.
-- **DELETE** `/books/:id`: Delete a book from the collection.
-
-### Middleware
-
-- **Authentication Middleware**: Ensures that all routes except for authentication require a valid JWT token. 
-
-## Technologies Used
-
-- **Backend**: Node.js, Express.js
-- **Authentication**: JSON Web Tokens (JWT)
-- **Database**: MySQL (via Sequelize ORM), MongoDB (for additional storage)
-- **External API**: Open Library API for ISBN-based book lookup
+- **Backend**: Node.js with Express
+- **Databases**:
+  - MySQL/MariaDB (via Sequelize ORM) for user accounts and book data
+  - MongoDB (via Mongoose) for reviews and additional metadata
+- **Authentication**: JWT (JSON Web Tokens)
+- **External APIs**: OpenLibrary for book information
 - **Development Tools**: Nodemon for automatic server restarts
-
-## Project Setup
-
-1. **Start the server**:
-
-   ```bash
-   npm run dev
-   ```
-
-2. **Test API with Postman**:
-   - Send a `POST` request to `/auth/login` to get the JWT token.
-   - Use the token to authenticate requests to other routes by including it in the `Authorization` header:
-     ```
-     Authorization: Bearer <your_jwt_token>
-     ```
 
 ## Development Notes
 
@@ -114,6 +28,98 @@ This project is a web-based API that allows users to manage their personal book 
 - Modify the `.env` file for any specific configurations, including the JWT secret key and database credentials.
 - External APIs (like Open Library) can be extended in the future for more detailed book information.
 
-## License
 
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+## API Endpoints
+
+### Authentication
+
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login and receive JWT token
+- `GET /api/auth/me` - Get current user details
+
+### Books
+
+- `GET /api/books` - Get all books with pagination, sorting, and filtering
+- `GET /api/books/:id` - Get a specific book by ID
+- `GET /api/books/isbn/:isbn` - Fetch book information from OpenLibrary by ISBN
+- `POST /api/books` - Add a new book to collection
+- `PUT /api/books/:id` - Update a book
+- `DELETE /api/books/:id` - Delete a book
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# MySQL Database Configuration
+MYSQL_DB=book_collection
+MYSQL_USER=your_mysql_username
+MYSQL_PASSWORD=your_mysql_password
+MYSQL_HOST=localhost
+
+# MongoDB Configuration
+MONGO_URI=mongodb://localhost:27017/book_collection
+
+# JWT Configuration
+JWT_SECRET=your_secret_key
+```
+
+## Installation & Setup
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/0xyashanand/book-collection-api.git
+   cd book-collection-api
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Set up databases:
+   - Create MySQL database and configure in `.env`
+   - Set up MongoDB connection in `.env`
+
+4. Run migrations (if applicable)
+
+5. Start the server:
+   ```
+   npm start
+   ```
+   
+   For development with auto-reload:
+   ```
+   npm run dev
+   ```
+
+## Book Fields
+
+| Field | Description |
+|-------|-------------|
+| title | Book title |
+| author | Book author(s) |
+| rating | User rating (0-5 scale) |
+| notes | User notes or review |
+| read_status | "Read", "Unread", or "In Progress" |
+| isbn | ISBN-10 or ISBN-13 identifier |
+| cover_image | URL to book cover image |
+| category | Genre or category (Fiction, Non-Fiction, etc.) |
+| wishlist | Boolean indicating if book is on wishlist |
+
+## Contributing
+
+Contributions welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+**Crafted with ❤️ by Yash Anand**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://linkedin.com/in/0xyashanand)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat&logo=github)](https://github.com/0xyashanand)
+[![Website](https://img.shields.io/badge/Website-Visit-14a1f0?style=flat&logo=google-chrome)](https://yashanand.live)
+[![Email](https://img.shields.io/badge/Email-Contact-d14836?style=flat&logo=gmail)](mailto:0xyashanand@gmail.com)
